@@ -1,0 +1,36 @@
+﻿<Application
+    x:Class="LayeringTest.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:LayeringTest"
+    RequestedTheme="Dark">
+
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <!-- This solid color brush should be the new mica brush when ready -->
+            <StaticResource x:Key="ApplicationPageBackgroundThemeBrush" ResourceKey="SystemControlChromeMediumLowAcrylicWindowMediumBrush"/>
+            
+            <SolidColorBrush x:Key="ContentLayerBackgroundBrush" Color="#ff000000" Opacity="0.5"/>
+            <SolidColorBrush x:Key="ContentLayerBorderBrush" Color="#ff000000" Opacity="0.05"/>
+
+            <!-- Override the navview expanded mode background to be transparent and let mica (to be) shine through -->
+            <SolidColorBrush x:Key="NavigationViewExpandedPaneBackground" Color="Transparent"/>
+            
+            <!-- Override the navview default pane background with a resource I intend to change at runtime -->
+            <StaticResource x:Key="NavigationViewDefaultPaneBackground" ResourceKey="NavPaneOpen"/>
+            <AcrylicBrush x:Key="NavPaneOpen" 
+                          Opacity="0" 
+                          BackgroundSource="Backdrop" 
+                          TintColor="{StaticResource SystemChromeAltHighColor}" 
+                          TintOpacity="0.6" 
+                          FallbackColor="{StaticResource SystemChromeMediumLowColor}" />
+
+        </ResourceDictionary>
+    </Application.Resources>
+
+</Application>
+

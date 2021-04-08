@@ -11,13 +11,17 @@
                                          >
 
     <Grid>
-        <local:TitleBarControl x:ConnectionId='2' x:Name="LocalTitleBarControl"/>        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <local:TitleBarControl x:ConnectionId='2' Grid.Row="0" x:Name="LocalTitleBarControl"/>        
 
-        <muxc:NavigationView x:ConnectionId='3' x:Name="nvSample" 
+        <muxc:NavigationView x:ConnectionId='3' Grid.Row="1" x:Name="nvSample" 
                              PaneDisplayMode="LeftCompact" 
                                                                 
                                                                
-                             Margin="0, 40, 0, 0"
                              IsBackButtonVisible="Collapsed"
                              >
             <muxc:NavigationView.MenuItems>
@@ -61,6 +65,11 @@
                                       IsOn="False"
                                                                      
                                       Margin="20, 0"/>
+                        <ComboBox x:ConnectionId='11' x:Name="ModeBox" Margin="20, 0" Header="TitleBar Mode" SelectedIndex="0" Width="200"                                             >
+                            <ComboBoxItem>Expanded</ComboBoxItem>
+                            <ComboBoxItem>CompactLabel</ComboBoxItem>
+                            <ComboBoxItem>CompactIcon</ComboBoxItem>
+                        </ComboBox>
                     </StackPanel>
                 </Grid>
             </Frame>

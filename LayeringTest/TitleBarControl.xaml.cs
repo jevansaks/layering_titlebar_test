@@ -13,6 +13,7 @@ using Windows.UI.Xaml.Controls.Primitives;
 using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml.Media.Imaging;
 using Windows.UI.Xaml.Navigation;
 
 // The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
@@ -22,10 +23,10 @@ namespace LayeringTest
     public sealed partial class TitleBarControl : UserControl
     {
         private bool searchVisibility = false;
-        private bool appTitleVisibility = true;
-        private bool appIconVisibility = true;
         private bool appBackButtonVisibility = false;
 
+        private string currentMode = "Expanded";
+        
         public static readonly DependencyProperty showSearchProperty =
             DependencyProperty.RegisterAttached(
               "ShowSearch",
@@ -42,6 +43,54 @@ namespace LayeringTest
               null
             );
 
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register(
+          "AppIcon",
+          typeof(string),
+          typeof(TitleBarControl),
+          new PropertyMetadata(null)
+        );
+
+        public string AppIcon
+        {
+            get { return appFontIcon.Source.ToString(); }
+            set { appFontIcon.Source = new BitmapImage(new Uri("ms-appx://" + value)); }
+        }
+
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
+          "AppTitle",
+          typeof(string),
+          typeof(TitleBarControl),
+          new PropertyMetadata(null)
+        );
+
+        public string AppTitle
+        {
+            get { return appTitleText.Text; }
+            set { appTitleText.Text = value; }
+        }
+
+        public static readonly DependencyProperty ModeProperty = DependencyProperty.Register(
+          "Mode",
+          typeof(string),
+          typeof(TitleBarControl),
+          new PropertyMetadata(null, new PropertyChangedCallback(OnModeChanged))
+        );
+
+        public string Mode
+        {
+            get { return currentMode; }
+            set 
+            {                
+                SetMode(value);
+            }
+        }
+
+        private static void OnModeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            TitleBarControl propertyMode = d as TitleBarControl;
+            propertyMode.Mode = e.NewValue as string;
+        }
+
         public bool ShowSearch
         {
             get { return searchVisibility; }
@@ -52,10 +101,13 @@ namespace LayeringTest
                 if (searchVisibility)
                 {
                     SearchBoxControl.Visibility = Visibility.Visible;
+                    TitleBarContent.Height = 48;
                 }
                 else
                 {
                     SearchBoxControl.Visibility = Visibility.Collapsed;
+                    TitleBarContent.Height = 32;
+                    SearchButton.Visibility = Visibility.Collapsed;
                 }
             }
         }
@@ -82,6 +134,9 @@ namespace LayeringTest
         {
             this.InitializeComponent();
             OverrideTitleBarContent();
+
+            appTitleText.Text = typeof(Program).Assembly.GetName().Name;
+            appFontIcon.Source = new BitmapImage(new Uri("ms-appx:///Assets/StoreLogo.png"));
         }
 
         private void OverrideTitleBarContent()
@@ -90,6 +145,7 @@ namespace LayeringTest
             var coreTitleBar = CoreApplication.GetCurrentView().TitleBar;
 
             var titleBar = ApplicationView.GetForCurrentView().TitleBar;
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Size(350, 600));
 
             // Set active window colors
             titleBar.ButtonForegroundColor = new Windows.UI.Color() { A = 255, R = 191, G = 191, B = 191 };
@@ -118,7 +174,7 @@ namespace LayeringTest
             // Register a handler for when the title bar visibility changes.
             // For example, when the title bar is invoked in full screen mode.
             coreTitleBar.IsVisibleChanged += CoreTitleBar_IsVisibleChanged;
-        }
+        }        
 
         private void CoreTitleBar_LayoutMetricsChanged(CoreApplicationViewTitleBar sender, object args)
         {
@@ -154,6 +210,50 @@ namespace LayeringTest
             else
             {
                 SearchBoxControl.MaxWidth = 480;
+            }
+
+            if (((Frame)Window.Current.Content).ActualWidth < 548 && ((Frame)Window.Current.Content).ActualWidth >= 500)
+            {             
+                SetMode("CompactIcon");
+
+                if (searchVisibility)
+                {
+                    SearchButton.Visibility = Visibility.Collapsed;
+                    SearchBoxControl.Visibility = Visibility.Visible;
+                }
+            }            
+            else if (((Frame)Window.Current.Content).ActualWidth < 500)
+            {
+                if (searchVisibility)
+                {
+                    SearchButton.Visibility = Visibility.Visible;
+                    SearchBoxControl.Visibility = Visibility.Collapsed;
+                }
+            }
+            else if (((Frame)Window.Current.Content).ActualWidth >= 548)
+            {
+                SetMode("Expanded");
+            }
+        }
+
+        private void SetMode(string mode)
+        {
+            currentMode = mode;
+
+            switch (mode)
+            {                
+                case "CompactLabel":
+                    appFontIcon.Visibility = Visibility.Collapsed;
+                    appTitleText.Visibility = Visibility.Visible;
+                    break;
+                case "CompactIcon":
+                    appFontIcon.Visibility = Visibility.Visible;
+                    appTitleText.Visibility = Visibility.Collapsed;
+                    break;
+                default:
+                    appFontIcon.Visibility = Visibility.Visible;
+                    appTitleText.Visibility = Visibility.Visible;
+                    break;
             }
         }
     }

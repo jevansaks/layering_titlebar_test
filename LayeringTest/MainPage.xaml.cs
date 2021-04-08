@@ -28,6 +28,8 @@ namespace LayeringTest
         private void nvSample_PaneOpening(Microsoft.UI.Xaml.Controls.NavigationView sender, object args)
         {
             //Change the opacity on the navview compact mode flyout so Acrylic is visible when flyout is open
+
+
             ((AcrylicBrush)Application.Current.Resources["NavPaneOpen"]).Opacity = 1;
         }
 
@@ -63,6 +65,11 @@ namespace LayeringTest
         private void backBtnToggle_Toggled(object sender, RoutedEventArgs e)
         {
             LocalTitleBarControl.ShowBackButton = backBtnToggle.IsOn;
+        }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LocalTitleBarControl.Mode = (ModeBox.SelectedItem as ComboBoxItem).Content as string;
         }
     }
 }

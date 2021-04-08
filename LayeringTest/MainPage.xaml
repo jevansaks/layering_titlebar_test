@@ -11,13 +11,17 @@
     SizeChanged="UserControl_SizeChanged">
 
     <Grid>
-        <local:TitleBarControl x:Name="LocalTitleBarControl"/>        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        
+        <local:TitleBarControl Grid.Row="0" x:Name="LocalTitleBarControl"/>        
 
-        <muxc:NavigationView x:Name="nvSample" 
+        <muxc:NavigationView Grid.Row="1" x:Name="nvSample" 
                              PaneDisplayMode="LeftCompact" 
                              PaneOpening="nvSample_PaneOpening" 
                              PaneClosing="nvSample_PaneClosing"
-                             Margin="0, 40, 0, 0"
                              IsBackButtonVisible="Collapsed"
                              >
             <muxc:NavigationView.MenuItems>
@@ -61,6 +65,11 @@
                                       IsOn="False"
                                       Toggled="backBtnToggle_Toggled"
                                       Margin="20, 0"/>
+                        <ComboBox x:Name="ModeBox" Margin="20, 0" Header="TitleBar Mode" SelectedIndex="0" Width="200" SelectionChanged="ComboBox_SelectionChanged">
+                            <ComboBoxItem>Expanded</ComboBoxItem>
+                            <ComboBoxItem>CompactLabel</ComboBoxItem>
+                            <ComboBoxItem>CompactIcon</ComboBoxItem>
+                        </ComboBox>
                     </StackPanel>
                 </Grid>
             </Frame>

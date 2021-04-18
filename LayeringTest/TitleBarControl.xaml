@@ -9,7 +9,7 @@
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     SizeChanged="UserControl_SizeChanged">
 
-    <Grid>
+    <Grid Background="{ThemeResource BaseLayerBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
